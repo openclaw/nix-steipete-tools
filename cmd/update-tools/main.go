@@ -8,7 +8,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/clawdbot/nix-stepiete-tools/internal"
+	"github.com/clawdbot/nix-steipete-tools/internal"
 )
 
 type Tool struct {
@@ -90,13 +90,13 @@ func updateOracle(repoRoot string) error {
 	if err := internal.ReplaceOnce(oracleFile, regexp.MustCompile(`hash = "sha256-[^"]+";`), fmt.Sprintf(`hash = "%s";`, assetHash)); err != nil {
 		return err
 	}
-	lockRe := regexp.MustCompile(`lockSrc = fetchFromGitHub \{[^}]*?hash = "sha256-[^"]+";`) 
+	lockRe := regexp.MustCompile(`(?s)lockSrc = fetchFromGitHub \{[^}]*hash = "sha256-[^"]+";`) 
 	if err := internal.ReplaceOnceFunc(oracleFile, lockRe, func(s string) string {
 		return regexp.MustCompile(`hash = "sha256-[^"]+";`).ReplaceAllString(s, fmt.Sprintf(`hash = "%s";`, lockHash))
 	}); err != nil {
 		return err
 	}
-	pnpmRe := regexp.MustCompile(`pnpmDeps.*?hash = "sha256-[^"]+";`)
+	pnpmRe := regexp.MustCompile(`(?s)pnpmDeps.*hash = "sha256-[^"]+";`)
 	if err := internal.ReplaceOnceFunc(oracleFile, pnpmRe, func(s string) string {
 		return regexp.MustCompile(`hash = "sha256-[^"]+";`).ReplaceAllString(s, `hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";`)
 	}); err != nil {
