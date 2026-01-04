@@ -19,16 +19,16 @@ These tools are essential for a capable clawdbot instance - screen capture, came
 
 | Tool | What it does |
 |------|--------------|
-| **summarize** | Summarize URLs, PDFs, images, audio, YouTube |
-| **gogcli** | Google Workspace CLI (Gmail, Calendar, Drive, Contacts, Sheets, Docs) |
-| **camsnap** | Capture snapshots/clips from RTSP/ONVIF cameras |
-| **sonoscli** | Control Sonos speakers |
-| **bird** | X/Twitter CLI (read, search, post) |
-| **peekaboo** | macOS screen capture + UI automation |
+| [**summarize**](https://summarize.sh) | Summarize URLs, PDFs, images, audio, YouTube |
+| [**gogcli**](https://gogcli.sh) | Google Workspace CLI (Gmail, Calendar, Drive, Contacts, Sheets, Docs) |
+| [**camsnap**](https://camsnap.ai) | Capture snapshots/clips from RTSP/ONVIF cameras |
+| [**sonoscli**](https://sonoscli.sh) | Control Sonos speakers |
+| [**bird**](https://bird.fast) | X/Twitter CLI (read, search, post) |
+| [**peekaboo**](https://peekaboo.boo) | macOS screen capture + UI automation |
 | **poltergeist** | File watcher with auto-rebuild |
-| **sag** | ElevenLabs text-to-speech |
-| **imsg** | iMessage/SMS CLI |
-| **oracle** | Bundle prompts + files for AI queries |
+| [**sag**](https://sag.sh) | ElevenLabs text-to-speech |
+| [**imsg**](https://imsg.to) | iMessage/SMS CLI |
+| [**oracle**](https://askoracle.dev) | Bundle prompts + files for AI queries |
 
 ## Usage (as clawdbot plugins)
 
