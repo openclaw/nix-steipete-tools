@@ -16,6 +16,16 @@ plugins = [
 ];
 ```
 
+## Skills sync (latest main)
+
+To keep skills aligned with `clawdbot/clawdbot` without pinning:
+
+```bash
+scripts/sync-skills.sh
+```
+
+This pulls `main` (sparse checkout) and only updates files when contents change.
+
 ## Packages (root flake)
 
 You can also import packages directly from the root flake:
