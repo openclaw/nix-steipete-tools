@@ -23,6 +23,10 @@
           poltergeist = pkgs.callPackage ./nix/pkgs/poltergeist.nix {};
           sag = pkgs.callPackage ./nix/pkgs/sag.nix {};
           imsg = pkgs.callPackage ./nix/pkgs/imsg.nix {};
+          oracle = pkgs.callPackage ./nix/pkgs/oracle.nix {
+            pkgs = pkgs;
+            pnpm = if pkgs ? pnpm_10 then pkgs.pnpm_10 else pkgs.pnpm;
+          };
         }
       );
 
@@ -36,6 +40,7 @@
         poltergeist = self.packages.${system}.poltergeist;
         sag = self.packages.${system}.sag;
         imsg = self.packages.${system}.imsg;
+        oracle = self.packages.${system}.oracle;
       });
     };
 }
