@@ -15,11 +15,13 @@
           pkgs = import nixpkgs { inherit system; };
         in {
           summarize = pkgs.callPackage ./nix/pkgs/summarize.nix {};
+          gogcli = pkgs.callPackage ./nix/pkgs/gogcli.nix {};
         }
       );
 
       checks = forAllSystems (system: {
         summarize = self.packages.${system}.summarize;
+        gogcli = self.packages.${system}.gogcli;
       });
     };
 }
