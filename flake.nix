@@ -17,6 +17,7 @@
           summarize = pkgs.callPackage ./nix/pkgs/summarize.nix {};
           gogcli = pkgs.callPackage ./nix/pkgs/gogcli.nix {};
           camsnap = pkgs.callPackage ./nix/pkgs/camsnap.nix {};
+          sonoscli = pkgs.callPackage ./nix/pkgs/sonoscli.nix {};
         }
       );
 
@@ -24,6 +25,7 @@
         summarize = self.packages.${system}.summarize;
         gogcli = self.packages.${system}.gogcli;
         camsnap = self.packages.${system}.camsnap;
+        sonoscli = self.packages.${system}.sonoscli;
       });
     };
 }
