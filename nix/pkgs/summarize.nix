@@ -104,8 +104,10 @@ if stdenv.isLinux then
 
     installPhase = ''
       runHook preInstall
-      mkdir -p "$out/libexec" "$out/bin"
+      mkdir -p "$out/libexec" "$out/libexec/packages" "$out/libexec/apps" "$out/bin"
       cp -r dist package.json node_modules "$out/libexec/"
+      cp -r packages/core "$out/libexec/packages/"
+      cp -r apps/chrome-extension "$out/libexec/apps/"
       chmod 0755 "$out/libexec/dist/cli.js"
       makeWrapper "${nodejs}/bin/node" "$out/bin/summarize" \
         --add-flags "$out/libexec/dist/cli.js"
