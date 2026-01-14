@@ -7,6 +7,7 @@
 , python3Packages
 , pkg-config
 , makeWrapper
+, jq
 , pkgs
 , zstd
 }:
@@ -57,6 +58,7 @@ if stdenv.isLinux then
       python3Packages.setuptools
       pkg-config
       makeWrapper
+      jq
       zstd
     ];
 
@@ -71,7 +73,15 @@ if stdenv.isLinux then
       npm_config_nodedir = "${nodejs.dev}";
       npm_config_build_from_source = "1";
       PNPM_CONFIG_IGNORE_SCRIPTS = "1";
+      PNPM_CONFIG_MANAGE_PACKAGE_MANAGER_VERSIONS = "false";
     };
+
+    postPatch = ''
+      if [ -f package.json ]; then
+        jq 'del(.packageManager)' package.json > package.json.next
+        mv package.json.next package.json
+      fi
+    '';
 
     buildPhase = ''
       runHook preBuild
