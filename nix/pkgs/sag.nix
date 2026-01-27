@@ -3,11 +3,11 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/moltbot/sag/releases/download/v0.2.2/sag_0.2.2_darwin_universal.tar.gz";
+      url = "https://github.com/steipete/sag/releases/download/v0.2.2/sag_0.2.2_darwin_universal.tar.gz";
       hash = "sha256-BVS675EiF9nh85iPttdJLUbS9JEFpeuRdeP4YfOc0ok=";
     };
     "x86_64-linux" = {
-      url = "https://github.com/moltbot/sag/releases/download/v0.2.2/sag_0.2.2_linux_amd64.tar.gz";
+      url = "https://github.com/steipete/sag/releases/download/v0.2.2/sag_0.2.2_linux_amd64.tar.gz";
       hash = "sha256-/d/iVTZI/ZzTRGYQxVF22JeFDXn0qpXWC2BdOH/6vcg=";
     };
   };

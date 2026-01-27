@@ -22,7 +22,7 @@ stdenv.mkDerivation (finalAttrs: {
   version = "0.8.5";
 
   srcTarball = fetchurl {
-    url = "https://github.com/moltbot/oracle/releases/download/v0.8.5/oracle-0.8.5.tgz";
+    url = "https://github.com/steipete/oracle/releases/download/v0.8.5/oracle-0.8.5.tgz";
     hash = "sha256-MSb1+5wEHK38iq+yob7Tz7xov0Wh9zHcmXGs/l2KdMA=";
   };
 

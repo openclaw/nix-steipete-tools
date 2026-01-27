@@ -3,7 +3,7 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/moltbot/Peekaboo/releases/download/v3.0.0-beta3/peekaboo-macos-universal.tar.gz";
+      url = "https://github.com/steipete/Peekaboo/releases/download/v3.0.0-beta3/peekaboo-macos-universal.tar.gz";
       hash = "sha256-d+rfb9XFTqxktIRNXMiHiQttb0XUmvYbBcbinqLL0kU=";
     };
   };

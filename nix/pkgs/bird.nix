@@ -3,7 +3,7 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/moltbot/bird/releases/download/v0.8.0/bird-macos-universal-v0.8.0.tar.gz";
+      url = "https://github.com/steipete/bird/releases/download/v0.8.0/bird-macos-universal-v0.8.0.tar.gz";
       hash = "sha256-PYm7QE6LDtTvMx8Nxi2HOFJjTKKoFK56Ssfv/BFDIM8=";
     };
   };

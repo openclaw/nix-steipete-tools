@@ -3,7 +3,7 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/moltbot/poltergeist/releases/download/v2.1.1/poltergeist-macos-universal-v2.1.1.tar.gz";
+      url = "https://github.com/steipete/poltergeist/releases/download/v2.1.1/poltergeist-macos-universal-v2.1.1.tar.gz";
       hash = "sha256-plQQjbB0QV7UY7U3ZdhfAZsAY/5m0G1E1WEgMm+elk8=";
     };
   };

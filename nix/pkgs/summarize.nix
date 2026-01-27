@@ -18,7 +18,7 @@ let
   version = "0.10.0";
   binSources = {
     "aarch64-darwin" = {
-      url = "https://github.com/moltbot/summarize/releases/download/v0.10.0/summarize-macos-arm64-v0.10.0.tar.gz";
+      url = "https://github.com/steipete/summarize/releases/download/v0.10.0/summarize-macos-arm64-v0.10.0.tar.gz";
       hash = "sha256-CUDf/Qe3YAU71pkEFA1x+nRsxmM4nzECy8Bo3EzgnWY=";
     };
   };
