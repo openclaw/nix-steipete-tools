@@ -112,6 +112,7 @@ PY
     runHook preInstall
     mkdir -p "$out/libexec" "$out/bin"
     cp -r dist package.json vendor assets-oracle-icon.png node_modules "$out/libexec/"
+    find "$out/libexec/node_modules" -name ".pnpm-workspace-state-v1.json" -delete
     chmod 0755 "$out/libexec/dist/bin/oracle-cli.js" "$out/libexec/dist/bin/oracle-mcp.js"
     ln -s "$out/libexec/dist/bin/oracle-cli.js" "$out/bin/oracle"
     ln -s "$out/libexec/dist/bin/oracle-mcp.js" "$out/bin/oracle-mcp"
