@@ -1,6 +1,7 @@
 # nix-steipete-tools
 
-> Core tools for openclaw. Batteries included. Always fresh.
+![GitHub Repo Banner](https://ghrb.waren.build/banner?header=%F0%9F%A6%9E+nix-steipete-tools&subheader=Core+tools+for+openclaw.+Batteries+included.+Always+fresh.&bg=fee2e2&color=bb2c2c&support=true)
+<!-- Created with GitHub Repo Banner by Waren Gonzaga: https://ghrb.waren.build -->
 
 Nix packaging for [Peter Steinberger's](https://github.com/steipete) tools, with per-tool openclaw plugins. Part of the [nix-openclaw](https://github.com/openclaw/nix-openclaw) ecosystem.
 
