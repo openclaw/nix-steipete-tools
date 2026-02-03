@@ -228,6 +228,16 @@ func main() {
 			NixFile: filepath.Join(repoRoot, "nix", "pkgs", "gogcli.nix"),
 		},
 		{
+			Name: "goplaces",
+			Repo: "steipete/goplaces",
+			Assets: []AssetSpec{
+				{System: "aarch64-darwin", Regex: regexp.MustCompile(`goplaces_[0-9.]+_darwin_arm64\.tar\.gz`)},
+				{System: "x86_64-linux", Regex: regexp.MustCompile(`goplaces_[0-9.]+_linux_amd64\.tar\.gz`)},
+				{System: "aarch64-linux", Regex: regexp.MustCompile(`goplaces_[0-9.]+_linux_arm64\.tar\.gz`)},
+			},
+			NixFile: filepath.Join(repoRoot, "nix", "pkgs", "goplaces.nix"),
+		},
+		{
 			Name: "camsnap",
 			Repo: "steipete/camsnap",
 			Assets: []AssetSpec{

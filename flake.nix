@@ -13,6 +13,7 @@
       packageSystems = {
         summarize = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         gogcli = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
+        goplaces = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         camsnap = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         sonoscli = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         bird = [ "aarch64-darwin" ];
@@ -37,6 +38,9 @@
           })
           // (lib.optionalAttrs (supports "gogcli") {
             gogcli = pkgs.callPackage ./nix/pkgs/gogcli.nix {};
+          })
+          // (lib.optionalAttrs (supports "goplaces") {
+            goplaces = pkgs.callPackage ./nix/pkgs/goplaces.nix {};
           })
           // (lib.optionalAttrs (supports "camsnap") {
             camsnap = pkgs.callPackage ./nix/pkgs/camsnap.nix {};

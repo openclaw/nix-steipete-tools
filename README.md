@@ -22,6 +22,7 @@ These tools are essential for a capable openclaw instance - screen capture, came
 |------|--------------|
 | [**summarize**](https://github.com/steipete/summarize) | Link → clean text → summary |
 | [**gogcli**](https://github.com/steipete/gogcli) | Google CLI for Gmail, Calendar, Drive, and Contacts |
+| [**goplaces**](https://github.com/steipete/goplaces) | Google Places API (New) CLI |
 | [**camsnap**](https://github.com/steipete/camsnap) | Capture snapshots/clips from RTSP/ONVIF cameras |
 | [**sonoscli**](https://github.com/steipete/sonoscli) | Control Sonos speakers |
 | [**bird**](https://github.com/steipete/bird) | Fast X CLI for tweeting, replying, and reading |
