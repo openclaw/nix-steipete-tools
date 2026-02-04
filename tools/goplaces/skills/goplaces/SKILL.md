@@ -31,13 +31,14 @@ Closest place to me
 - Pick the top result as the closest match unless distance is explicitly returned in output.
 
 Directions (A → B)
-- Use the Directions API via the CLI (default mode: walking).
-- Place IDs (preferred for agent workflows):
-  - `goplaces directions --from-place-id <fromId> --to-place-id <toId>`
-- Add turn-by-turn steps:
-  - `goplaces directions --from-place-id <fromId> --to-place-id <toId> --steps`
+- Always fetch step-by-step walking directions (even if user just says “directions”):
+  - `goplaces directions --from-place-id <fromId> --to-place-id <toId> --steps --json`
+- Prefer place IDs (resolve first if needed):
+  - `goplaces resolve "Hotel Zelos San Francisco" --json`
 - Compare driving ETA alongside walking:
-  - `goplaces directions --from-place-id <fromId> --to-place-id <toId> --compare drive`
+  - `goplaces directions --from-place-id <fromId> --to-place-id <toId> --compare drive --steps --json`
+- Prefer metric output: format from JSON using `distance_meters` (m/km) and `duration_seconds` (mins). Use step `distance_meters` for each step.
+- Never paraphrase or reinterpret directions; emit `steps[].instruction` verbatim and do not reword compass directions.
 - `goplaces route` is only for searching places along a route (Routes API), not directions/ETA.
 
 Notes
