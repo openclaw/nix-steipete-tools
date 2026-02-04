@@ -17,7 +17,7 @@
         in
           if gogcli == null then null else {
             name = "gogcli";
-            skills = [ ./skills/gogcli ];
+            skills = [ ./skills/gog ];
             packages = [ gogcli ];
             needs = {
               stateDirs = [];
