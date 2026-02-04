@@ -7,8 +7,8 @@ buildGoModule rec {
   src = fetchFromGitHub {
     owner = "joshp123";
     repo = "goplaces";
-    rev = "c7be7782989c4f2d24aba8c1122d0b6207247d31";
-    hash = "sha256-noyIyj7dtVscUUSUlcUhKt45QUH/bZL/fINwqR6fZS0=";
+    rev = "a71fe3de986a78607d923f397113d7eb1babc111";
+    hash = "sha256-Lufp9+fwcoluNZR9iDYoIJ1yu3sM/8Q/EOkAlq5VLdk=";
   };
 
   subPackages = [ "cmd/goplaces" ];

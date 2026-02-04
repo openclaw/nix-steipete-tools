@@ -37,6 +37,7 @@ Directions (A → B)
   - `goplaces resolve "Hotel Zelos San Francisco" --json`
 - Compare driving ETA alongside walking:
   - `goplaces directions --from-place-id <fromId> --to-place-id <toId> --compare drive --steps --json`
+- Units default to metric; use `--units imperial` only when explicitly requested.
 - Prefer metric output: format from JSON using `distance_meters` (m/km) and `duration_seconds` (mins). Use step `distance_meters` for each step.
 - Never paraphrase or reinterpret directions; emit `steps[].instruction` verbatim and do not reword compass directions.
 - `goplaces route` is only for searching places along a route (Routes API), not directions/ETA.
