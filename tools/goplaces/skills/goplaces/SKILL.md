@@ -40,11 +40,12 @@ Directions (A → B)
 - Units default to metric; use `--units imperial` only when explicitly requested.
 - Prefer metric output: format from JSON using `distance_meters` (m/km) and `duration_seconds` (mins). Use step `distance_meters` for each step.
 - Never paraphrase or reinterpret directions; emit `steps[].instruction` verbatim and do not reword compass directions.
-- Always include an Apple Maps link for Apple Watch:
-  - Resolve origin/destination to lat/lng (use `goplaces resolve --json`).
-  - Format: `https://maps.apple.com/?saddr=<lat>,<lng>&daddr=<lat>,<lng>&dirflg=w`.
+- Always include an Apple Maps link for Apple Watch that starts from current location:
+  - Resolve destination to lat/lng (use `goplaces resolve --json`).
+  - Format: `https://maps.apple.com/?daddr=<lat>,<lng>&dirflg=w`.
   - Use `dirflg=d` for driving and `dirflg=r` for transit.
   - Apple Maps URL scheme does not document cycling; if bicycling is requested, include the Apple Maps link without `dirflg` and note that cycling is not supported in Apple Maps links.
+  - If the user explicitly asks for a fixed origin, use `saddr=<lat>,<lng>` and note that Apple Maps will open in preview mode (Steps) until they change origin to Current Location.
 - `goplaces route` is only for searching places along a route (Routes API), not directions/ETA.
 
 Notes
