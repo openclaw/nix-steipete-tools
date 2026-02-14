@@ -2,13 +2,13 @@
 
 buildGoModule rec {
   pname = "goplaces";
-  version = "0.2.2-dev";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
-    owner = "joshp123";
+    owner = "steipete";
     repo = "goplaces";
-    rev = "a71fe3de986a78607d923f397113d7eb1babc111";
-    hash = "sha256-Lufp9+fwcoluNZR9iDYoIJ1yu3sM/8Q/EOkAlq5VLdk=";
+    rev = "v${version}";
+    hash = "sha256-D54ybZznbc0EXNh/SqyIvfn5x3krI3G9fbXTTj1BaEs=";
   };
 
   subPackages = [ "cmd/goplaces" ];
@@ -23,7 +23,7 @@ buildGoModule rec {
 
   meta = with lib; {
     description = "Modern Go client + CLI for the Google Places API";
-    homepage = "https://github.com/joshp123/goplaces";
+    homepage = "https://github.com/steipete/goplaces";
     license = licenses.mit;
     platforms = platforms.darwin ++ platforms.linux;
     mainProgram = "goplaces";
