@@ -120,6 +120,7 @@ if stdenv.isLinux then
       runHook preInstall
       mkdir -p "$out/libexec" "$out/libexec/packages" "$out/libexec/apps" "$out/bin"
       cp -r dist node_modules "$out/libexec/"
+      find "$out/libexec/node_modules" -name ".pnpm-workspace-state-v1.json" -delete
       cp -r packages/core "$out/libexec/packages/"
       cp -r apps/chrome-extension "$out/libexec/apps/"
       chmod 0755 "$out/libexec/dist/cli.js"
