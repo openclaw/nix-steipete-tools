@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, watchman }:
+{ lib, stdenv, fetchurl }:
 
 let
   sources = {
@@ -29,8 +29,6 @@ stdenv.mkDerivation {
     chmod 0755 "$out/bin/poltergeist" "$out/bin/polter"
     runHook postInstall
   '';
-
-  propagatedBuildInputs = [ watchman ];
 
   meta = with lib; {
     description = "Universal file watcher with auto-rebuild for any language or build system";

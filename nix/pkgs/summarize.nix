@@ -72,7 +72,7 @@ if stdenv.isLinux then
       PNPM_CONFIG_HOME = "/tmp/pnpm-config";
       XDG_CACHE_HOME = "/tmp/pnpm-cache";
       NPM_CONFIG_USERCONFIG = "/tmp/pnpm-config/.npmrc";
-      npm_config_nodedir = "${nodejs.dev}";
+      npm_config_nodedir = "${lib.getDev nodejs}";
       npm_config_build_from_source = "1";
       PNPM_CONFIG_IGNORE_SCRIPTS = "1";
       PNPM_CONFIG_MANAGE_PACKAGE_MANAGER_VERSIONS = "false";
@@ -120,6 +120,7 @@ if stdenv.isLinux then
       runHook preInstall
       mkdir -p "$out/libexec" "$out/libexec/packages" "$out/libexec/apps" "$out/bin"
       cp -r dist node_modules "$out/libexec/"
+      find "$out/libexec/node_modules" -name ".pnpm-workspace-state-v1.json" -delete
       cp -r packages/core "$out/libexec/packages/"
       cp -r apps/chrome-extension "$out/libexec/apps/"
       chmod 0755 "$out/libexec/dist/cli.js"
