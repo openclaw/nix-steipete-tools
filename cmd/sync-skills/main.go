@@ -60,6 +60,8 @@ func main() {
 
 	mappings := []Mapping{
 		{"summarize", "skills/summarize"},
+		{"discrawl", "skills/discrawl"},
+		{"wacrawl", "skills/wacrawl"},
 		{"gogcli", "skills/gog"},
 		{"camsnap", "skills/camsnap"},
 		{"sonoscli", "skills/sonoscli"},

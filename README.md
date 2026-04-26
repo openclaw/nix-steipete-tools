@@ -21,6 +21,8 @@ These tools are essential for a capable openclaw instance - screen capture, came
 | Tool | What it does |
 |------|--------------|
 | [**summarize**](https://github.com/steipete/summarize) | Link → clean text → summary |
+| [**discrawl**](https://github.com/steipete/discrawl) | Mirror Discord into SQLite and search history locally |
+| [**wacrawl**](https://github.com/steipete/wacrawl) | Read-only local archive and search for WhatsApp Desktop data |
 | [**gogcli**](https://github.com/steipete/gogcli) | Google CLI for Gmail, Calendar, Drive, and Contacts |
 | [**goplaces**](https://github.com/steipete/goplaces) | Google Places API (New) CLI |
 | [**camsnap**](https://github.com/steipete/camsnap) | Capture snapshots/clips from RTSP/ONVIF cameras |
@@ -37,8 +39,10 @@ Each tool is a subflake under `tools/<tool>/` exporting `openclawPlugin`. Point 
 ```nix
 programs.openclaw.plugins = [
   { source = "github:openclaw/nix-steipete-tools?dir=tools/camsnap"; }
+  { source = "github:openclaw/nix-steipete-tools?dir=tools/discrawl"; }
   { source = "github:openclaw/nix-steipete-tools?dir=tools/peekaboo"; }
   { source = "github:openclaw/nix-steipete-tools?dir=tools/summarize"; }
+  { source = "github:openclaw/nix-steipete-tools?dir=tools/wacrawl"; }
 ];
 ```
 
@@ -56,13 +60,17 @@ inputs.nix-steipete-tools.url = "github:openclaw/nix-steipete-tools";
 
 # Then use:
 inputs.nix-steipete-tools.packages.aarch64-darwin.camsnap
+inputs.nix-steipete-tools.packages.aarch64-darwin.discrawl
 inputs.nix-steipete-tools.packages.aarch64-darwin.peekaboo
+inputs.nix-steipete-tools.packages.aarch64-darwin.wacrawl
 # etc.
 
 # Linux examples:
 inputs.nix-steipete-tools.packages.x86_64-linux.camsnap
+inputs.nix-steipete-tools.packages.x86_64-linux.discrawl
 inputs.nix-steipete-tools.packages.aarch64-linux.gogcli
 inputs.nix-steipete-tools.packages.x86_64-linux.summarize
+inputs.nix-steipete-tools.packages.x86_64-linux.wacrawl
 ```
 
 ## Skills syncing

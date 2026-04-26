@@ -12,6 +12,8 @@
       forAllSystems = f: lib.genAttrs systems (system: f system);
       packageSystems = {
         summarize = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
+        discrawl = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
+        wacrawl = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         gogcli = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         goplaces = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
         camsnap = [ "aarch64-darwin" "x86_64-linux" "aarch64-linux" ];
@@ -33,6 +35,12 @@
               pnpm = if pkgs ? pnpm_10 then pkgs.pnpm_10 else pkgs.pnpm;
               nodejs = if pkgs ? nodejs_22 then pkgs.nodejs_22 else pkgs.nodejs;
             };
+          })
+          // (lib.optionalAttrs (supports "discrawl") {
+            discrawl = pkgs.callPackage ./nix/pkgs/discrawl.nix {};
+          })
+          // (lib.optionalAttrs (supports "wacrawl") {
+            wacrawl = pkgs.callPackage ./nix/pkgs/wacrawl.nix {};
           })
           // (lib.optionalAttrs (supports "gogcli") {
             gogcli = pkgs.callPackage ./nix/pkgs/gogcli.nix {};
