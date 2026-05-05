@@ -3,7 +3,7 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/steipete/imsg/releases/download/v0.6.0/imsg-macos.zip";
+      url = "https://github.com/openclaw/imsg/releases/download/v0.6.0/imsg-macos.zip";
       hash = "sha256-oA/Q1ZlLNtMxAwGrf5TbgsrfWxdJPE043nBW0cDCCw8=";
     };
   };
