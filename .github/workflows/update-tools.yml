@@ -31,8 +31,8 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git config user.name "clawdbot-ci"
-          git config user.email "ci@clawdbot"
+          git config user.name "openclaw-ci"
+          git config user.email "ci@openclaw.local"
           git add -A
           git commit -m "update tool releases"
           git push

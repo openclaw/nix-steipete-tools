@@ -52,7 +52,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	workdir, err := os.MkdirTemp("", "clawdbot-skills-")
+	workdir, err := os.MkdirTemp("", "openclaw-skills-")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -70,8 +70,8 @@ func main() {
 		{"imsg", "skills/imsg"},
 	}
 
-	log.Printf("[sync-skills] cloning clawdbot main")
-	if err := run("", "git", "clone", "--depth", "1", "--filter=blob:none", "--sparse", "https://github.com/clawdbot/clawdbot.git", workdir); err != nil {
+	log.Printf("[sync-skills] cloning openclaw main")
+	if err := run("", "git", "clone", "--depth", "1", "--filter=blob:none", "--sparse", "https://github.com/openclaw/openclaw.git", workdir); err != nil {
 		log.Fatal(err)
 	}
 	paths := []string{}

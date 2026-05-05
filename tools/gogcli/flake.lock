@@ -47,14 +47,14 @@
         "lastModified": 1772109602,
         "narHash": "sha256-Lzs6tzCkOOtDaZIRSGvS6ykJOtu0hZrdI95kxhkSIuw=",
         "owner": "openclaw",
-        "repo": "nix-steipete-tools",
+        "repo": "nix-openclaw-tools",
         "rev": "eddb00d4c1037a983913fccf32880aece050cd32",
         "type": "github"
       },
       "original": {
         "narHash": "sha256-Lzs6tzCkOOtDaZIRSGvS6ykJOtu0hZrdI95kxhkSIuw=",
         "owner": "openclaw",
-        "repo": "nix-steipete-tools",
+        "repo": "nix-openclaw-tools",
         "rev": "eddb00d4c1037a983913fccf32880aece050cd32",
         "type": "github"
       }

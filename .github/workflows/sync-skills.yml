@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Sync skills from clawdbot
+      - name: Sync skills from OpenClaw
         run: go run ./cmd/sync-skills
 
       - name: Commit & push if changed
@@ -26,8 +26,8 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git config user.name "clawdbot-ci"
-          git config user.email "ci@clawdbot"
+          git config user.name "openclaw-ci"
+          git config user.email "ci@openclaw.local"
           git add -A
-          git commit -m "sync skills from clawdbot"
+          git commit -m "sync skills from openclaw"
           git push

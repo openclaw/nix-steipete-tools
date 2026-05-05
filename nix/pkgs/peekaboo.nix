@@ -31,7 +31,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Lightning-fast macOS screenshots & AI vision analysis";
-    homepage = "https://github.com/steipete/peekaboo";
+    homepage = "https://github.com/openclaw/Peekaboo";
     license = licenses.mit;
     platforms = builtins.attrNames sources;
     mainProgram = "peekaboo";

@@ -22,7 +22,7 @@ let
 
   meta = with lib; {
     description = "Modern Go client + CLI for the Google Places API (New)";
-    homepage = "https://github.com/steipete/goplaces";
+    homepage = "https://github.com/openclaw/goplaces";
     license = licenses.mit;
     platforms = builtins.attrNames sources;
     mainProgram = "goplaces";

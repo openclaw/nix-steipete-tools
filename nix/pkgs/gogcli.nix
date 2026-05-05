@@ -39,7 +39,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Google CLI for Gmail, Calendar, Drive, and Contacts";
-    homepage = "https://github.com/steipete/gogcli";
+    homepage = "https://github.com/openclaw/gogcli";
     license = licenses.mit;
     platforms = builtins.attrNames sources;
     mainProgram = "gog";

@@ -45,7 +45,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Mirror Discord into SQLite and search server history locally";
-    homepage = "https://github.com/steipete/discrawl";
+    homepage = "https://github.com/openclaw/discrawl";
     license = licenses.mit;
     platforms = builtins.attrNames sources;
     mainProgram = "discrawl";

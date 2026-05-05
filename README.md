@@ -1,15 +1,15 @@
-# nix-steipete-tools
+# nix-openclaw-tools
 
-> Core tools for openclaw. Batteries included. Always fresh.
+> Reproducible OpenClaw tool packaging.
 
-Nix packaging for [Peter Steinberger's](https://github.com/steipete) tools, with per-tool openclaw plugins. Part of the [nix-openclaw](https://github.com/openclaw/nix-openclaw) ecosystem.
+Nix packaging for OpenClaw-adjacent tools, with per-tool OpenClaw plugin metadata. Part of the [nix-openclaw](https://github.com/openclaw/nix-openclaw) ecosystem.
 
 Darwin/aarch64 plus Linux (x86_64/aarch64) for tools that ship Linux builds.
 On Linux, `summarize` is built from source (Node 22 + pnpm) since upstream only ships a macOS Bun binary.
 
 ## Why this exists
 
-These tools are essential for a capable openclaw instance - screen capture, camera access, TTS, messaging. Packaging them as Nix flakes with openclaw plugin metadata means:
+OpenClaw should have a small default toolchain and explicit optional plugins. Packaging these tools as Nix flakes with OpenClaw plugin metadata means:
 
 - **Reproducible**: Pinned versions, no Homebrew drift
 - **Declarative**: Add a plugin, `home-manager switch`, done
@@ -34,17 +34,16 @@ Homebrew configuration, not in these pure Nix package/module definitions.
 | Tool | What it does |
 |------|--------------|
 | [**summarize**](https://github.com/steipete/summarize) | Link → clean text → summary |
-| [**discrawl**](https://github.com/steipete/discrawl) | Mirror Discord into SQLite and search history locally |
+| [**discrawl**](https://github.com/openclaw/discrawl) | Mirror Discord into SQLite and search history locally |
 | [**wacrawl**](https://github.com/steipete/wacrawl) | Read-only local archive and search for WhatsApp Desktop data |
-| [**gogcli**](https://github.com/steipete/gogcli) | Google CLI for Gmail, Calendar, Drive, and Contacts |
-| [**goplaces**](https://github.com/steipete/goplaces) | Google Places API (New) CLI |
+| [**gogcli**](https://github.com/openclaw/gogcli) | Google CLI for Gmail, Calendar, Drive, and Contacts |
+| [**goplaces**](https://github.com/openclaw/goplaces) | Google Places API (New) CLI |
 | [**camsnap**](https://github.com/steipete/camsnap) | Capture snapshots/clips from RTSP/ONVIF cameras |
 | [**sonoscli**](https://github.com/steipete/sonoscli) | Control Sonos speakers |
-| [**peekaboo**](https://github.com/steipete/peekaboo) | Lightning-fast macOS screenshots & AI vision analysis |
+| [**peekaboo**](https://github.com/openclaw/Peekaboo) | Lightning-fast macOS screenshots & AI vision analysis |
 | [**poltergeist**](https://github.com/steipete/poltergeist) | Universal file watcher with auto-rebuild |
 | [**sag**](https://github.com/steipete/sag) | Command-line ElevenLabs TTS with mac-style flags |
-| [**imsg**](https://github.com/steipete/imsg) | iMessage/SMS CLI |
-| [**CodexBar**](https://github.com/steipete/CodexBar) | macOS menu bar app for Codex, Claude, and other provider usage |
+| [**imsg**](https://github.com/openclaw/imsg) | iMessage/SMS CLI |
 
 ## Usage (as openclaw plugins)
 
@@ -52,11 +51,11 @@ Each tool is a subflake under `tools/<tool>/` exporting `openclawPlugin`. Point 
 
 ```nix
 programs.openclaw.plugins = [
-  { source = "github:openclaw/nix-steipete-tools?dir=tools/camsnap"; }
-  { source = "github:openclaw/nix-steipete-tools?dir=tools/discrawl"; }
-  { source = "github:openclaw/nix-steipete-tools?dir=tools/peekaboo"; }
-  { source = "github:openclaw/nix-steipete-tools?dir=tools/summarize"; }
-  { source = "github:openclaw/nix-steipete-tools?dir=tools/wacrawl"; }
+  { source = "github:openclaw/nix-openclaw-tools?dir=tools/camsnap"; }
+  { source = "github:openclaw/nix-openclaw-tools?dir=tools/discrawl"; }
+  { source = "github:openclaw/nix-openclaw-tools?dir=tools/peekaboo"; }
+  { source = "github:openclaw/nix-openclaw-tools?dir=tools/summarize"; }
+  { source = "github:openclaw/nix-openclaw-tools?dir=tools/wacrawl"; }
 ];
 ```
 
@@ -70,57 +69,21 @@ Each plugin bundles:
 If you just want the binaries without the plugin wrapper:
 
 ```nix
-inputs.nix-steipete-tools.url = "github:openclaw/nix-steipete-tools";
+inputs.nix-openclaw-tools.url = "github:openclaw/nix-openclaw-tools";
 
 # Then use:
-inputs.nix-steipete-tools.packages.aarch64-darwin.camsnap
-inputs.nix-steipete-tools.packages.aarch64-darwin.discrawl
-inputs.nix-steipete-tools.packages.aarch64-darwin.peekaboo
-inputs.nix-steipete-tools.packages.aarch64-darwin.wacrawl
-inputs.nix-steipete-tools.packages.aarch64-darwin.codexbar-app
+inputs.nix-openclaw-tools.packages.aarch64-darwin.camsnap
+inputs.nix-openclaw-tools.packages.aarch64-darwin.discrawl
+inputs.nix-openclaw-tools.packages.aarch64-darwin.peekaboo
+inputs.nix-openclaw-tools.packages.aarch64-darwin.wacrawl
 # etc.
 
 # Linux examples:
-inputs.nix-steipete-tools.packages.x86_64-linux.camsnap
-inputs.nix-steipete-tools.packages.x86_64-linux.discrawl
-inputs.nix-steipete-tools.packages.aarch64-linux.gogcli
-inputs.nix-steipete-tools.packages.x86_64-linux.summarize
-inputs.nix-steipete-tools.packages.x86_64-linux.wacrawl
-```
-
-### Home Manager modules
-
-Some packages also ship Home Manager modules so they can be enabled directly
-without hand-writing install and launchd wiring. For CodexBar:
-
-```nix
-{
-  imports = [ inputs.nix-steipete-tools.homeManagerModules.codexbar ];
-
-  programs.codexbar.enable = true;
-}
-```
-
-That adds the CodexBar app package to `home.packages`. Home Manager can then
-expose the app bundle through its Darwin app targets. If you want Home Manager
-to own startup too, enable the launchd agent explicitly:
-
-```nix
-{
-  programs.codexbar = {
-    enable = true;
-    launchd.enable = true;
-    launchd.keepAlive = false;
-  };
-}
-```
-
-### macOS app bundles
-
-If you only want the raw app package, use the package output directly:
-
-```nix
-inputs.nix-steipete-tools.packages.aarch64-darwin.codexbar-app
+inputs.nix-openclaw-tools.packages.x86_64-linux.camsnap
+inputs.nix-openclaw-tools.packages.x86_64-linux.discrawl
+inputs.nix-openclaw-tools.packages.aarch64-linux.gogcli
+inputs.nix-openclaw-tools.packages.x86_64-linux.summarize
+inputs.nix-openclaw-tools.packages.x86_64-linux.wacrawl
 ```
 
 ## Skills syncing
@@ -151,13 +114,7 @@ Fetches latest release versions/URLs/hashes and updates the Nix expressions.
 | **update-tools** | Every 10 min | Checks for new tool releases |
 | **Garnix** | On push | Builds all packages via `checks.*` (darwin + linux) |
 
-Automated PRs keep everything fresh without manual intervention.
-
-## Temporarily disabled
-
-`bird` is not exported right now because the upstream GitHub release assets for
-v0.8.0 are gone. The npm package still exists, but this flake does not currently
-build npm dependencies for it.
+Automation commits directly when versions or skills change.
 
 ## License
 

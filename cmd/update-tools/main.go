@@ -9,7 +9,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/clawdbot/nix-steipete-tools/internal"
+	"github.com/openclaw/nix-openclaw-tools/internal"
 )
 
 type Tool struct {
@@ -149,7 +149,7 @@ func main() {
 	tools := []Tool{
 		{
 			Name: "discrawl",
-			Repo: "steipete/discrawl",
+			Repo: "openclaw/discrawl",
 			Assets: []AssetSpec{
 				{System: "aarch64-darwin", Regex: regexp.MustCompile(`discrawl_[0-9.]+_darwin_arm64\.tar\.gz`)},
 				{System: "x86_64-linux", Regex: regexp.MustCompile(`discrawl_[0-9.]+_linux_amd64\.tar\.gz`)},
@@ -169,7 +169,7 @@ func main() {
 		},
 		{
 			Name: "gogcli",
-			Repo: "steipete/gogcli",
+			Repo: "openclaw/gogcli",
 			Assets: []AssetSpec{
 				{System: "aarch64-darwin", Regex: regexp.MustCompile(`gogcli_[0-9.]+_darwin_arm64\.tar\.gz`)},
 				{System: "x86_64-linux", Regex: regexp.MustCompile(`gogcli_[0-9.]+_linux_amd64\.tar\.gz`)},
@@ -179,7 +179,7 @@ func main() {
 		},
 		{
 			Name: "goplaces",
-			Repo: "steipete/goplaces",
+			Repo: "openclaw/goplaces",
 			Assets: []AssetSpec{
 				{System: "aarch64-darwin", Regex: regexp.MustCompile(`goplaces_[0-9.]+_darwin_arm64\.tar\.gz`)},
 				{System: "x86_64-darwin", Regex: regexp.MustCompile(`goplaces_[0-9.]+_darwin_amd64\.tar\.gz`)},
@@ -210,7 +210,7 @@ func main() {
 		},
 		{
 			Name: "peekaboo",
-			Repo: "steipete/peekaboo",
+			Repo: "openclaw/Peekaboo",
 			Assets: []AssetSpec{
 				{System: "aarch64-darwin", Regex: regexp.MustCompile(`peekaboo-macos-(?:arm64|universal)\.tar\.gz`)},
 			},
@@ -235,7 +235,7 @@ func main() {
 		},
 		{
 			Name: "imsg",
-			Repo: "steipete/imsg",
+			Repo: "openclaw/imsg",
 			Assets: []AssetSpec{
 				{System: "aarch64-darwin", Regex: regexp.MustCompile(`imsg-macos\.zip`)},
 			},

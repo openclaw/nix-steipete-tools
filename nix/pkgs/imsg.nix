@@ -35,7 +35,7 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     description = "Send and read iMessage / SMS from the terminal";
-    homepage = "https://github.com/steipete/imsg";
+    homepage = "https://github.com/openclaw/imsg";
     license = licenses.mit;
     platforms = builtins.attrNames sources;
     mainProgram = "imsg";

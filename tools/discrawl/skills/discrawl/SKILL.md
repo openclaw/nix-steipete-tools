@@ -1,7 +1,7 @@
 ---
 name: discrawl
 description: Mirror Discord guild history into local SQLite and query it offline with search, messages, mentions, reports, and DM wiretap import.
-homepage: https://github.com/steipete/discrawl
+homepage: https://github.com/openclaw/discrawl
 metadata:
   {
     "openclaw":
