@@ -3,22 +3,22 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/steipete/discrawl/releases/download/v0.6.5/discrawl_0.6.5_darwin_arm64.tar.gz";
-      hash = "sha256-nxt8Pq0ldbf4QefkBYDMIEzp9dRZUBuK7GBygI+4HDc=";
+      url = "https://github.com/steipete/discrawl/releases/download/v0.6.6/discrawl_0.6.6_darwin_arm64.tar.gz";
+      hash = "sha256-0E6wsXrmhUCi7QOQ9O9AQTVLqow2V3xtPY5pLu9tblE=";
     };
     "x86_64-linux" = {
-      url = "https://github.com/steipete/discrawl/releases/download/v0.6.5/discrawl_0.6.5_linux_amd64.tar.gz";
-      hash = "sha256-0lLlZYWZgvebBNWfZjicdB+o9tJ43N4n3CxAQ9mLfHM=";
+      url = "https://github.com/steipete/discrawl/releases/download/v0.6.6/discrawl_0.6.6_linux_amd64.tar.gz";
+      hash = "sha256-BEfe4Qymqt8284GJI6wqvFPuWAjBoLrAXpUo0XfhXUE=";
     };
     "aarch64-linux" = {
-      url = "https://github.com/steipete/discrawl/releases/download/v0.6.5/discrawl_0.6.5_linux_arm64.tar.gz";
-      hash = "sha256-k+ls+9dKvBLaMbThCoNgn6vQxGhviDeXaH6JmbeBrLM=";
+      url = "https://github.com/steipete/discrawl/releases/download/v0.6.6/discrawl_0.6.6_linux_arm64.tar.gz";
+      hash = "sha256-rEHI1Lt6EZLIedb2w4BGbBDRUa4UMZqmL6nTXQ4Uflw=";
     };
   };
 in
 stdenv.mkDerivation {
   pname = "discrawl";
-  version = "0.6.5";
+  version = "0.6.6";
 
   src = fetchurl sources.${stdenv.hostPlatform.system};
 
