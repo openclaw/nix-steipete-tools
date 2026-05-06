@@ -10,6 +10,7 @@
   python3,
   sqlite,
   darwin,
+  xcbuild,
 }:
 
 let
@@ -81,6 +82,7 @@ stdenv.mkDerivation {
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     darwin.cctools
+    xcbuild
   ];
 
   buildInputs = [ sqlite ];
