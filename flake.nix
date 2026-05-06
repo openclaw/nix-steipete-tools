@@ -22,6 +22,7 @@
         poltergeist = [ "aarch64-darwin" ];
         sag = [ "aarch64-darwin" "x86_64-linux" ];
         imsg = [ "aarch64-darwin" ];
+        qmd = [ "aarch64-darwin" "x86_64-linux" ];
       };
     in {
       packages = forAllSystems (system:
@@ -66,8 +67,22 @@
           // (lib.optionalAttrs (supports "imsg") {
             imsg = pkgs.callPackage ./nix/pkgs/imsg.nix {};
           })
+          // (lib.optionalAttrs (supports "qmd") {
+            qmd = pkgs.callPackage ./nix/pkgs/qmd.nix {};
+          })
       );
 
-      checks = forAllSystems (system: self.packages.${system});
+      checks = forAllSystems (system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+          packages = self.packages.${system};
+        in
+          packages
+          // (lib.optionalAttrs (packages ? qmd) {
+            qmd-smoke = pkgs.callPackage ./nix/checks/qmd-smoke.nix {
+              qmd = packages.qmd;
+            };
+          })
+      );
     };
 }

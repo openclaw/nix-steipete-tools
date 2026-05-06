@@ -44,6 +44,7 @@ Homebrew configuration, not in these pure Nix package/module definitions.
 | [**poltergeist**](https://github.com/steipete/poltergeist) | Universal file watcher with auto-rebuild |
 | [**sag**](https://github.com/steipete/sag) | Command-line ElevenLabs TTS with mac-style flags |
 | [**imsg**](https://github.com/openclaw/imsg) | iMessage/SMS CLI |
+| [**qmd**](https://github.com/tobi/qmd) | On-device hybrid search for markdown knowledge bases |
 
 ## Usage (as openclaw plugins)
 
@@ -105,6 +106,10 @@ go run ./cmd/update-tools
 ```
 
 Fetches latest release versions/URLs/hashes and updates the Nix expressions.
+
+QMD is source-packaged because upstream does not publish release assets. Keep it
+fresh through the same maintainer automation path, but do not make its smoke
+check pull embedding/reranking models; model prewarming belongs in nix-openclaw.
 
 ## CI
 
