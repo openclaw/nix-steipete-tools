@@ -42,15 +42,15 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
 
+      - name: Verify tool updater
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          trap 'git diff -- nix/pkgs' EXIT
+          go run ./cmd/update-tools
+
       - name: Build and run summarize
         run: |
           summarize_store="$(nix build .#summarize --no-link --print-out-paths --print-build-logs)"
           "$summarize_store/bin/summarize" --version
           "$summarize_store/bin/summarize" --help
-
-      - name: Verify tool updater
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          go run ./cmd/update-tools
-          git diff --stat

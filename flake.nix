@@ -33,8 +33,10 @@
           (lib.optionalAttrs (supports "summarize") {
             summarize = pkgs.callPackage ./nix/pkgs/summarize.nix {
               pkgs = pkgs;
-              pnpm = if pkgs ? pnpm_10 then pkgs.pnpm_10 else pkgs.pnpm;
-              nodejs = if pkgs ? nodejs_22 then pkgs.nodejs_22 else pkgs.nodejs;
+              pnpm = pkgs.callPackage ./nix/pkgs/summarize-pnpm.nix {
+                nodejs = pkgs.nodejs_24;
+              };
+              nodejs = pkgs.nodejs_24;
             };
           })
           // (lib.optionalAttrs (supports "discrawl") {
