@@ -29,3 +29,39 @@ jobs:
 
       - name: Build
         run: go build ./...
+
+  packages:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-15]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      - name: Evaluate supported systems
+        run: |
+          nix flake check --no-build --all-systems
+          for plugin in gogcli goplaces summarize; do
+            nix flake metadata --no-update-lock-file --no-write-lock-file "./tools/$plugin" >/dev/null
+          done
+
+      - name: Build package checks
+        run: nix flake check --print-build-logs
+
+      - name: Build and run packages
+        run: |
+          for tool in summarize discrawl wacrawl; do
+            tool_store="$(nix build ".#$tool" --no-link --print-out-paths --print-build-logs)"
+            "$tool_store/bin/$tool" --version
+            if [ "$tool" = summarize ]; then
+              SUMMARIZE_BIN="$tool_store/bin/summarize" nix shell --inputs-from . nixpkgs#go --command go test -v ./internal -run '^TestSummarizePackageExtracts$' -count=1
+            fi
+          done

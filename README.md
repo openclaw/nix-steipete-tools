@@ -5,7 +5,7 @@
 Nix packaging for OpenClaw-adjacent tools, with per-tool OpenClaw plugin metadata. Part of the [nix-openclaw](https://github.com/openclaw/nix-openclaw) ecosystem.
 
 Darwin/aarch64 plus Linux (x86_64/aarch64) for tools that ship Linux builds.
-On Linux, `summarize` is built from source (Node 22 + pnpm) since upstream only ships a macOS Bun binary.
+On Linux, `summarize` is built from source (Node 24 + pnpm 11.25.0, matching upstream's package manager) since upstream only ships a macOS Bun binary.
 
 ## Why this exists
 
@@ -118,7 +118,7 @@ check pull embedding/reranking models; model prewarming belongs in nix-openclaw.
 
 | Workflow | Schedule | What it does |
 |----------|----------|--------------|
-| **CI** | Pull requests and pushes to main | Checks Go formatting, vets, tests with the race detector, and builds the maintenance commands |
+| **CI** | Pull requests and pushes to main | Checks Go formatting, vets, tests with the race detector, builds the maintenance commands and package checks on all supported systems, and tests summarize article extraction |
 | **sync-skills** | Every 30 min | Pulls latest skills from openclaw main |
 | **update-tools** | Every 10 min | Checks for new tool releases |
 | **Garnix** | On push | Builds all packages via `checks.*` (darwin + linux) |
