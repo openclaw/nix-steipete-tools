@@ -9,4 +9,13 @@
   preConfigure = ''
     rm -rf dist/vendor
   '';
+
+  installPhase = ''
+    runHook preInstall
+    mkdir -p "$out/bin" "$out/libexec"
+    cp -R . "$out/libexec/pnpm"
+    ln -s "$out/libexec/pnpm/bin/pnpm.mjs" "$out/bin/pnpm"
+    ln -s "$out/libexec/pnpm/bin/pnpx.mjs" "$out/bin/pnpx"
+    runHook postInstall
+  '';
 }
