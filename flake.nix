@@ -32,10 +32,7 @@
         in
           (lib.optionalAttrs (supports "summarize") {
             summarize = pkgs.callPackage ./nix/pkgs/summarize.nix {
-              pkgs = pkgs;
-              pnpm = pkgs.callPackage ./nix/pkgs/summarize-pnpm.nix {
-                nodejs = pkgs.nodejs_24;
-              };
+              pnpm = pkgs.pnpm_11;
               nodejs = pkgs.nodejs_24;
             };
           })
@@ -83,6 +80,11 @@
           // (lib.optionalAttrs (packages ? qmd) {
             qmd-smoke = pkgs.callPackage ./nix/checks/qmd-smoke.nix {
               qmd = packages.qmd;
+            };
+          })
+          // (lib.optionalAttrs (packages ? imsg && packages ? peekaboo) {
+            macos-runtime-assets = pkgs.callPackage ./nix/checks/macos-runtime-assets.nix {
+              inherit (packages) imsg peekaboo;
             };
           })
       );

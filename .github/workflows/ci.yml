@@ -30,8 +30,12 @@ jobs:
       - name: Build
         run: go build ./...
 
-  summarize:
-    runs-on: ubuntu-latest
+  packages:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm, macos-15]
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     steps:
       - name: Checkout
@@ -42,15 +46,22 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
 
-      - name: Verify tool updater
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Evaluate supported systems
         run: |
-          trap 'git diff -- nix/pkgs' EXIT
-          go run ./cmd/update-tools
+          nix flake check --no-build --all-systems
+          for plugin in gogcli goplaces summarize; do
+            nix flake metadata --no-update-lock-file --no-write-lock-file "./tools/$plugin" >/dev/null
+          done
 
-      - name: Build and run summarize
+      - name: Build package checks
+        run: nix flake check --print-build-logs
+
+      - name: Build and run packages
         run: |
-          summarize_store="$(nix build .#summarize --no-link --print-out-paths --print-build-logs)"
-          "$summarize_store/bin/summarize" --version
-          "$summarize_store/bin/summarize" --help
+          for tool in summarize discrawl wacrawl; do
+            tool_store="$(nix build ".#$tool" --no-link --print-out-paths --print-build-logs)"
+            "$tool_store/bin/$tool" --version
+            if [ "$tool" = summarize ]; then
+              SUMMARIZE_BIN="$tool_store/bin/summarize" go test -v ./internal -run '^TestSummarizePackageExtracts$' -count=1
+            fi
+          done

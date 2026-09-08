@@ -3,14 +3,14 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/openclaw/Peekaboo/releases/download/v4.3.1/peekaboo-macos-universal.tar.gz";
-      hash = "sha256-4m+XgtIq40aCHJHcRUpQeXwEXSCn7s5+3hYL2U8WX/0=";
+      url = "https://github.com/openclaw/Peekaboo/releases/download/v4.3.3/peekaboo-macos-universal.tar.gz";
+      hash = "sha256-jJ2uZ+ZEWfR2U/LTzXWA5rWT4NgSLaH728LI8JB0hkE=";
     };
   };
 in
 stdenv.mkDerivation {
   pname = "peekaboo";
-  version = "4.3.1";
+  version = "4.3.3";
 
   src = fetchurl sources.${stdenv.hostPlatform.system};
 
@@ -24,7 +24,14 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
     mkdir -p "$out/bin"
-    cp $(find . -type f -name peekaboo | head -1) "$out/bin/peekaboo"
+    binary="$(find . -type f -name peekaboo -print -quit)"
+    cp "$binary" "$out/bin/peekaboo"
+    binaryDir="$(dirname "$binary")"
+    for companion in "$binaryDir"/*.bundle "$binaryDir"/*.dylib; do
+      if [ -e "$companion" ]; then
+        cp -R "$companion" "$out/bin/"
+      fi
+    done
     chmod 0755 "$out/bin/peekaboo"
     runHook postInstall
   '';

@@ -3,14 +3,14 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/openclaw/imsg/releases/download/v0.15.1/imsg-macos.zip";
-      hash = "sha256-IPT2i1kFtSmUvOdHY97Jbi0T/vBDpPYE7PyLp2SqZFI=";
+      url = "https://github.com/openclaw/imsg/releases/download/v0.15.3/imsg-macos.zip";
+      hash = "sha256-l6zPmb54OtYFwBtEFVbeC9QLdCM9mNpQynpD2Zam7mg=";
     };
   };
 in
 stdenv.mkDerivation {
   pname = "imsg";
-  version = "0.15.1";
+  version = "0.15.3";
 
   src = fetchurl sources.${stdenv.hostPlatform.system};
 
@@ -27,9 +27,11 @@ stdenv.mkDerivation {
     mkdir -p "$out/bin"
     cp imsg "$out/bin/imsg"
     chmod 0755 "$out/bin/imsg"
-    if [ -f PhoneNumberKit_PhoneNumberKit.bundle ]; then
-      cp -R PhoneNumberKit_PhoneNumberKit.bundle "$out/bin/"
-    fi
+    for companion in *.bundle *.dylib; do
+      if [ -e "$companion" ]; then
+        cp -R "$companion" "$out/bin/"
+      fi
+    done
     runHook postInstall
   '';
 

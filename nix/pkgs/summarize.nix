@@ -3,41 +3,37 @@
 , fetchurl
 , nodejs
 , pnpm
+, fetchPnpmDeps
+, pnpmConfigHook
 , python3
 , python3Packages
 , pkg-config
 , makeWrapper
-, jq
 , git
-, pkgs
-, zstd
 }:
 
 let
   pname = "summarize";
-  version = "0.21.11";
+  version = "0.21.13";
   binSources = {
     "aarch64-darwin" = {
-      url = "https://github.com/steipete/summarize/releases/download/v0.21.11/summarize-macos-arm64-v0.21.11.tar.gz";
-      hash = "sha256-cufDQk6Tooe49ElNlUsNjSHXMlHBknX9oH9ag1cLRXA=";
+      url = "https://github.com/steipete/summarize/releases/download/v0.21.13/summarize-macos-arm64-v0.21.13.tar.gz";
+      hash = "sha256-gpaxE21stzCtK0xsuemgonARd8dCBB9MBtj/izClzws=";
     };
   };
 
   src = fetchurl {
     url = "https://github.com/steipete/summarize/archive/refs/tags/v${version}.tar.gz";
-    hash = "sha256-b9FU0bsByPhH0ULtRk62GhKto9ruLI11ilqe8qWylsY=";
+    hash = "sha256-riFcuBjmQYYNB+MJEIfH/mc/dauLozw5mGAuQDJwF20=";
   };
 
-  pnpmFetchDepsPkg = pkgs.callPackage "${pkgs.path}/pkgs/build-support/node/fetch-pnpm-deps" {
-    inherit pnpm;
-  };
-
-  pnpmDeps = (pnpmFetchDepsPkg.fetchPnpmDeps {
+  pnpmDeps = (fetchPnpmDeps {
     pname = pname;
     version = version;
     src = src;
-    hash = "sha256-mKnFB5d+djHhi1T+1q1DP+MYKRgqzQ/AtGs6JMOVsKQ=";
-    fetcherVersion = 3;
+    inherit pnpm;
+    hash = "sha256-2eQRvOwo5QygzLSihi9I1KZAd33g0rgUZreOFcEX53s=";
+    fetcherVersion = 4;
   });
 
   meta = with lib; {
@@ -50,18 +46,17 @@ let
 in
 if stdenv.isLinux then
   stdenv.mkDerivation {
-    inherit pname version src meta;
+    inherit pname version src meta pnpmDeps;
 
     nativeBuildInputs = [
       nodejs
       pnpm
+      pnpmConfigHook
       python3
       python3Packages.setuptools
       pkg-config
       makeWrapper
-      jq
       git
-      zstd
     ];
 
     # makeWrapper completes the runtime package during install. Generic fixup
@@ -69,38 +64,14 @@ if stdenv.isLinux then
     dontFixup = true;
 
     env = {
-      PNPM_IGNORE_PACKAGE_MANAGER_CHECK = "1";
       CI = "1";
-      HOME = "/tmp";
-      PNPM_HOME = "/tmp/pnpm-home";
-      PNPM_CONFIG_HOME = "/tmp/pnpm-config";
-      XDG_CACHE_HOME = "/tmp/pnpm-cache";
-      NPM_CONFIG_USERCONFIG = "/tmp/pnpm-config/.npmrc";
       npm_config_nodedir = "${lib.getDev nodejs}";
       npm_config_build_from_source = "1";
-      PNPM_CONFIG_IGNORE_SCRIPTS = "1";
-      PNPM_CONFIG_MANAGE_PACKAGE_MANAGER_VERSIONS = "false";
-      PNPM_CONFIG_OFFLINE = "true";
     };
-
-    postPatch = ''
-      if [ -f package.json ]; then
-        jq 'del(.packageManager)' package.json > package.json.next
-        mv package.json.next package.json
-      fi
-    '';
 
     buildPhase = ''
       runHook preBuild
       set -euxo pipefail
-      echo "summarize: prepare pnpm store $(date -Is)"
-      mkdir -p "$HOME" "$PNPM_HOME" "$PNPM_CONFIG_HOME" "$XDG_CACHE_HOME"
-      export PNPM_STORE_PATH="$TMPDIR/pnpm-store"
-      mkdir -p "$PNPM_STORE_PATH"
-      tar --zstd -xf ${pnpmDeps}/pnpm-store.tar.zst -C "$PNPM_STORE_PATH"
-      chmod -R +w "$PNPM_STORE_PATH"
-      echo "summarize: pnpm install $(date -Is)"
-      timeout -k 1m 20m pnpm install --offline --frozen-lockfile --store-dir "$PNPM_STORE_PATH" --ignore-scripts
       export PATH="$PWD/node_modules/.bin:$PATH"
       rm -rf dist packages/core/dist
       echo "summarize: build core $(date -Is)"
