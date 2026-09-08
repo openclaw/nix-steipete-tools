@@ -107,6 +107,9 @@ go run ./cmd/update-tools
 
 Fetches latest release versions/URLs/hashes and updates the Nix expressions.
 
+GitHub requests time out after 30 seconds waiting for response headers. Once a
+response starts, slow bodies can finish without a whole-request deadline.
+
 QMD is source-packaged because upstream does not publish release assets. Keep it
 fresh through the same maintainer automation path, but do not make its smoke
 check pull embedding/reranking models; model prewarming belongs in nix-openclaw.
@@ -115,6 +118,7 @@ check pull embedding/reranking models; model prewarming belongs in nix-openclaw.
 
 | Workflow | Schedule | What it does |
 |----------|----------|--------------|
+| **CI** | Pull requests and pushes to main | Checks Go formatting, vets, tests with the race detector, and builds the maintenance commands |
 | **sync-skills** | Every 30 min | Pulls latest skills from openclaw main |
 | **update-tools** | Every 10 min | Checks for new tool releases |
 | **Garnix** | On push | Builds all packages via `checks.*` (darwin + linux) |

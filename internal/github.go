@@ -12,9 +12,15 @@ import (
 )
 
 var (
-	HTTPClient    = &http.Client{Timeout: 30 * time.Second}
+	HTTPClient    = newHTTPClient()
 	GitHubAPIBase = "https://api.github.com"
 )
+
+func newHTTPClient() *http.Client {
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.ResponseHeaderTimeout = 30 * time.Second
+	return &http.Client{Transport: transport}
+}
 
 type Release struct {
 	TagName string  `json:"tag_name"`

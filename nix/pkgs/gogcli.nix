@@ -3,22 +3,22 @@
 let
   sources = {
     "aarch64-darwin" = {
-      url = "https://github.com/openclaw/gogcli/releases/download/v0.37.0/gogcli_0.37.0_darwin_arm64.tar.gz";
-      hash = "sha256-ihwMLAJk/cYCzOULREMeEFaSafmOBUq1UDPGUqlrfGE=";
+      url = "https://github.com/openclaw/gogcli/releases/download/v0.39.1/gogcli_0.39.1_darwin_arm64.tar.gz";
+      hash = "sha256-OHBipZDUcNCxOxx5yrcsWQi/xCq8XPaCQ78/EvwwrNo=";
     };
     "x86_64-linux" = {
-      url = "https://github.com/openclaw/gogcli/releases/download/v0.37.0/gogcli_0.37.0_linux_amd64.tar.gz";
-      hash = "sha256-kF/tC/q6+l3ecYnlBkKz+jHX/EqtUKjSfSuSBx2HWWI=";
+      url = "https://github.com/openclaw/gogcli/releases/download/v0.39.1/gogcli_0.39.1_linux_amd64.tar.gz";
+      hash = "sha256-Q476RguCkfAjKZrS7VYQcBytdQjbiDkgOcCJHiF147E=";
     };
     "aarch64-linux" = {
-      url = "https://github.com/openclaw/gogcli/releases/download/v0.37.0/gogcli_0.37.0_linux_arm64.tar.gz";
-      hash = "sha256-Sr3pDE50zrEl8/3Ydnb/eVjon3ggl4/6Ed4mruBuchw=";
+      url = "https://github.com/openclaw/gogcli/releases/download/v0.39.1/gogcli_0.39.1_linux_arm64.tar.gz";
+      hash = "sha256-fCO0AskjS6R26Es5rG2HVES0fsUWMSqZ6HfhOGuigpU=";
     };
   };
 in
 stdenv.mkDerivation {
   pname = "gogcli";
-  version = "0.37.0";
+  version = "0.39.1";
 
   src = fetchurl sources.${stdenv.hostPlatform.system};
 
