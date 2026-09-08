@@ -47,3 +47,10 @@ jobs:
           summarize_store="$(nix build .#summarize --no-link --print-out-paths --print-build-logs)"
           "$summarize_store/bin/summarize" --version
           "$summarize_store/bin/summarize" --help
+
+      - name: Verify tool updater
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          go run ./cmd/update-tools
+          git diff --stat

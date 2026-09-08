@@ -233,7 +233,7 @@ func updateSummarize(repoRoot string) error {
 	}
 	if pnpmHash == "" {
 		_ = os.WriteFile(summarizeFile, orig, 0644)
-		return fmt.Errorf("summarize pnpm hash not found (build err: %v)", buildErr)
+		return fmt.Errorf("summarize pnpm hash not found (build err: %v)\n%s", buildErr, logText)
 	}
 	if err := internal.ReplaceOnceFunc(summarizeFile, pnpmRe, func(s string) string {
 		return regexp.MustCompile(`hash = "sha256-[^"]+";`).ReplaceAllString(s, fmt.Sprintf(`hash = "%s";`, pnpmHash))
