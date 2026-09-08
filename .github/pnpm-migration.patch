@@ -1,0 +1,149 @@
+diff --git a/cmd/update-tools/main.go b/cmd/update-tools/main.go
+index d79bcd9..f6e0ace 100644
+--- a/cmd/update-tools/main.go
++++ b/cmd/update-tools/main.go
+@@ -233,7 +233,7 @@ func updateSummarize(repoRoot string) error {
+ 	}
+ 	if pnpmHash == "" {
+ 		_ = os.WriteFile(summarizeFile, orig, 0644)
+-		return fmt.Errorf("summarize pnpm hash not found (build err: %v)", buildErr)
++		return fmt.Errorf("summarize pnpm hash not found (build err: %v)\n%s", buildErr, logText)
+ 	}
+ 	if err := internal.ReplaceOnceFunc(summarizeFile, pnpmRe, func(s string) string {
+ 		return regexp.MustCompile(`hash = "sha256-[^"]+";`).ReplaceAllString(s, fmt.Sprintf(`hash = "%s";`, pnpmHash))
+diff --git a/flake.lock b/flake.lock
+index 644277d..9d3fc77 100644
+--- a/flake.lock
++++ b/flake.lock
+@@ -2,11 +2,11 @@
+   "nodes": {
+     "nixpkgs": {
+       "locked": {
+-        "lastModified": 1767364772,
+-        "narHash": "sha256-fFUnEYMla8b7UKjijLnMe+oVFOz6HjijGGNS1l7dYaQ=",
++        "lastModified": 1788834054,
++        "narHash": "sha256-9dzTcXMtlknZyT47Vv1PnpGgN7UYA8WxxqyxsKdvYbo=",
+         "owner": "NixOS",
+         "repo": "nixpkgs",
+-        "rev": "16c7794d0a28b5a37904d55bcca36003b9109aaa",
++        "rev": "e9b9cbecbf6c25ca26c150d78570e6332694a129",
+         "type": "github"
+       },
+       "original": {
+diff --git a/flake.nix b/flake.nix
+index a174e39..9359a8d 100644
+--- a/flake.nix
++++ b/flake.nix
+@@ -32,9 +32,8 @@
+         in
+           (lib.optionalAttrs (supports "summarize") {
+             summarize = pkgs.callPackage ./nix/pkgs/summarize.nix {
+-              pkgs = pkgs;
+-              pnpm = if pkgs ? pnpm_10 then pkgs.pnpm_10 else pkgs.pnpm;
+-              nodejs = if pkgs ? nodejs_22 then pkgs.nodejs_22 else pkgs.nodejs;
++              pnpm = pkgs.pnpm_11;
++              nodejs = pkgs.nodejs_24;
+             };
+           })
+           // (lib.optionalAttrs (supports "discrawl") {
+diff --git a/nix/pkgs/summarize.nix b/nix/pkgs/summarize.nix
+index 65355ea..c9e1431 100644
+--- a/nix/pkgs/summarize.nix
++++ b/nix/pkgs/summarize.nix
+@@ -3,14 +3,13 @@
+ , fetchurl
+ , nodejs
+ , pnpm
++, fetchPnpmDeps
++, pnpmConfigHook
+ , python3
+ , python3Packages
+ , pkg-config
+ , makeWrapper
+-, jq
+ , git
+-, pkgs
+-, zstd
+ }:
+ 
+ let
+@@ -28,16 +27,13 @@ let
+     hash = "sha256-b9FU0bsByPhH0ULtRk62GhKto9ruLI11ilqe8qWylsY=";
+   };
+ 
+-  pnpmFetchDepsPkg = pkgs.callPackage "${pkgs.path}/pkgs/build-support/node/fetch-pnpm-deps" {
+-    inherit pnpm;
+-  };
+-
+-  pnpmDeps = (pnpmFetchDepsPkg.fetchPnpmDeps {
++  pnpmDeps = (fetchPnpmDeps {
+     pname = pname;
+     version = version;
+     src = src;
++    inherit pnpm;
+     hash = "sha256-mKnFB5d+djHhi1T+1q1DP+MYKRgqzQ/AtGs6JMOVsKQ=";
+-    fetcherVersion = 3;
++    fetcherVersion = 4;
+   });
+ 
+   meta = with lib; {
+@@ -50,18 +46,17 @@ let
+ in
+ if stdenv.isLinux then
+   stdenv.mkDerivation {
+-    inherit pname version src meta;
++    inherit pname version src meta pnpmDeps;
+ 
+     nativeBuildInputs = [
+       nodejs
+       pnpm
++      pnpmConfigHook
+       python3
+       python3Packages.setuptools
+       pkg-config
+       makeWrapper
+-      jq
+       git
+-      zstd
+     ];
+ 
+     # makeWrapper completes the runtime package during install. Generic fixup
+@@ -69,38 +64,14 @@ if stdenv.isLinux then
+     dontFixup = true;
+ 
+     env = {
+-      PNPM_IGNORE_PACKAGE_MANAGER_CHECK = "1";
+       CI = "1";
+-      HOME = "/tmp";
+-      PNPM_HOME = "/tmp/pnpm-home";
+-      PNPM_CONFIG_HOME = "/tmp/pnpm-config";
+-      XDG_CACHE_HOME = "/tmp/pnpm-cache";
+-      NPM_CONFIG_USERCONFIG = "/tmp/pnpm-config/.npmrc";
+       npm_config_nodedir = "${lib.getDev nodejs}";
+       npm_config_build_from_source = "1";
+-      PNPM_CONFIG_IGNORE_SCRIPTS = "1";
+-      PNPM_CONFIG_MANAGE_PACKAGE_MANAGER_VERSIONS = "false";
+-      PNPM_CONFIG_OFFLINE = "true";
+     };
+ 
+-    postPatch = ''
+-      if [ -f package.json ]; then
+-        jq 'del(.packageManager)' package.json > package.json.next
+-        mv package.json.next package.json
+-      fi
+-    '';
+-
+     buildPhase = ''
+       runHook preBuild
+       set -euxo pipefail
+-      echo "summarize: prepare pnpm store $(date -Is)"
+-      mkdir -p "$HOME" "$PNPM_HOME" "$PNPM_CONFIG_HOME" "$XDG_CACHE_HOME"
+-      export PNPM_STORE_PATH="$TMPDIR/pnpm-store"
+-      mkdir -p "$PNPM_STORE_PATH"
+-      tar --zstd -xf ${pnpmDeps}/pnpm-store.tar.zst -C "$PNPM_STORE_PATH"
+-      chmod -R +w "$PNPM_STORE_PATH"
+-      echo "summarize: pnpm install $(date -Is)"
+-      timeout -k 1m 20m pnpm install --offline --frozen-lockfile --store-dir "$PNPM_STORE_PATH" --ignore-scripts
+       export PATH="$PWD/node_modules/.bin:$PATH"
+       rm -rf dist packages/core/dist
+       echo "summarize: build core $(date -Is)"

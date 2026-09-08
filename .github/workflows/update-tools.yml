@@ -1,38 +1,34 @@
 name: update-tools
 
 on:
-  schedule:
-    - cron: "*/10 * * * *"
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  update:
+  probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 0
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v12
-
-      - name: Update tool versions and hashes
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - name: Derive updated package hashes
         env:
           GH_TOKEN: ${{ github.token }}
-        run: go run ./cmd/update-tools
-
-      - name: Commit & push if changed
         run: |
-          if git diff --quiet; then
-            echo "No changes"
-            exit 0
-          fi
-          git config user.name "openclaw-ci"
-          git config user.email "ci@openclaw.local"
-          git add -A
-          git commit -m "update tool releases"
-          git push
+          git apply .github/pnpm-migration.patch
+          go run ./cmd/update-tools
+          python3 - <<'PY'
+          import json, pathlib
+          print('NIX_PROOF_FILES_BEGIN')
+          print(json.dumps({str(p): p.read_text() for p in pathlib.Path('nix/pkgs').glob('*.nix')}, sort_keys=True))
+          print('NIX_PROOF_FILES_END')
+          PY
+      - name: Build and run updated summarize
+        run: |
+          result_path="$(nix build .#summarize --no-link --print-out-paths --print-build-logs)"
+          "$result_path/bin/summarize" --version
+          "$result_path/bin/summarize" --help
