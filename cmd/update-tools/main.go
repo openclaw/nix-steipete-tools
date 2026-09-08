@@ -1,6 +1,9 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -10,6 +13,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/openclaw/nix-openclaw-tools/internal"
 )
@@ -225,10 +229,18 @@ func updateSummarize(repoRoot string) error {
 
 	log.Printf("[update-tools] summarize: deriving pnpm hash")
 	logText, buildErr := internal.NixBuildSummarize()
+	if errors.Is(buildErr, context.Canceled) || errors.Is(buildErr, context.DeadlineExceeded) {
+		_ = os.WriteFile(summarizeFile, orig, 0644)
+		return fmt.Errorf("summarize build interrupted: %w", buildErr)
+	}
 	pnpmHash := internal.ExtractGotHash(logText)
 	if pnpmHash == "" && runtime.GOOS == "darwin" {
 		log.Printf("[update-tools] summarize: no pnpm hash on darwin, trying x86_64-linux")
 		logText, buildErr = internal.NixBuildSummarizeSystem("x86_64-linux")
+		if errors.Is(buildErr, context.Canceled) || errors.Is(buildErr, context.DeadlineExceeded) {
+			_ = os.WriteFile(summarizeFile, orig, 0644)
+			return fmt.Errorf("summarize build interrupted: %w", buildErr)
+		}
 		pnpmHash = internal.ExtractGotHash(logText)
 	}
 	if pnpmHash == "" {
@@ -244,6 +256,12 @@ func updateSummarize(repoRoot string) error {
 }
 
 func main() {
+	flag.DurationVar(&internal.PrefetchTimeout, "prefetch-timeout", 10*time.Minute, "deadline per Nix prefetch (0 disables)")
+	flag.DurationVar(&internal.SummarizeTimeout, "build-timeout", 45*time.Minute, "deadline per summarize build (0 disables)")
+	flag.Parse()
+	if internal.PrefetchTimeout < 0 || internal.SummarizeTimeout < 0 {
+		log.Fatal("timeouts must not be negative")
+	}
 	repoRoot, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)

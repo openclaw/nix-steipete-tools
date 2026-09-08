@@ -2,16 +2,16 @@ package internal
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"fmt"
-	"os/exec"
 	"regexp"
 	"strings"
 	"time"
 )
 
 var PrefetchTimeout = 10 * time.Minute
+
+var SummarizeTimeout = 45 * time.Minute
 
 type PrefetchResult struct {
 	Hash string `json:"hash"`
@@ -22,18 +22,10 @@ type PrefetchGitHubResult struct {
 }
 
 func PrefetchHash(url string) (string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), PrefetchTimeout)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, "nix", "store", "prefetch-file", "--json", url)
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	if err := cmd.Run(); err != nil {
-		if ctx.Err() != nil {
-			return "", fmt.Errorf("prefetch failed: %w", ctx.Err())
-		}
-		return "", fmt.Errorf("prefetch failed: %v\nstdout:\n%s\nstderr:\n%s", err, stdout.String(), stderr.String())
+	if err := RunCommand("", PrefetchTimeout, &stdout, &stderr, "nix", "store", "prefetch-file", "--json", url); err != nil {
+		return "", fmt.Errorf("prefetch failed: %w\nstdout:\n%s\nstderr:\n%s", err, stdout.String(), stderr.String())
 	}
 	var res PrefetchResult
 	if err := json.Unmarshal(stdout.Bytes(), &res); err != nil {
@@ -46,17 +38,9 @@ func PrefetchHash(url string) (string, error) {
 }
 
 func PrefetchGitHub(owner, repo, rev string) (string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), PrefetchTimeout)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, "nix", "run", "nixpkgs#nix-prefetch-github", "--", "--json", "--quiet", owner, repo, "--rev", rev)
 	var out bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &out
-	if err := cmd.Run(); err != nil {
-		if ctx.Err() != nil {
-			return "", fmt.Errorf("prefetch github failed: %w", ctx.Err())
-		}
-		return "", fmt.Errorf("prefetch github failed: %v: %s", err, out.String())
+	if err := RunCommand("", PrefetchTimeout, &out, &out, "nix", "run", "nixpkgs#nix-prefetch-github", "--", "--json", "--quiet", owner, repo, "--rev", rev); err != nil {
+		return "", fmt.Errorf("prefetch github failed: %w: %s", err, out.String())
 	}
 	raw := out.String()
 	start := strings.Index(raw, "{")
@@ -84,11 +68,8 @@ func NixBuildSummarizeSystem(system string) (string, error) {
 	if system != "" {
 		args = append(args, "--system", system)
 	}
-	cmd := exec.Command("nix", args...)
 	var out bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &out
-	err := cmd.Run()
+	err := RunCommand("", SummarizeTimeout, &out, &out, "nix", args...)
 	return out.String(), err
 }
 

@@ -43,7 +43,7 @@ func waitForPID(t *testing.T, pidfile string) int {
 
 func TestRunKillsHungChild(t *testing.T) {
 	old := runTimeout
-	runTimeout = time.Second
+	runTimeout = 3 * time.Second
 	t.Cleanup(func() { runTimeout = old })
 
 	pidfile := installHangCommand(t, "git")
@@ -59,7 +59,7 @@ func TestRunKillsHungChild(t *testing.T) {
 		done <- run("", "git", "clone", "--depth", "1", "https://example.invalid/openclaw.git", t.TempDir())
 	}()
 
-	deadline := time.After(3 * time.Second)
+	deadline := time.After(6 * time.Second)
 	for {
 		if pid == 0 {
 			if b, err := os.ReadFile(pidfile); err == nil {

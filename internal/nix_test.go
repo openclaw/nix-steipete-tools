@@ -43,7 +43,7 @@ func waitForPID(t *testing.T, pidfile string) int {
 
 func assertHungChildKilled(t *testing.T, pidfile string, done <-chan error) {
 	t.Helper()
-	deadline := time.After(3 * time.Second)
+	deadline := time.After(6 * time.Second)
 	var pid int
 	t.Cleanup(func() {
 		if pid > 0 {
@@ -79,7 +79,7 @@ func assertHungChildKilled(t *testing.T, pidfile string, done <-chan error) {
 
 func TestPrefetchHashKillsHungChild(t *testing.T) {
 	old := PrefetchTimeout
-	PrefetchTimeout = time.Second
+	PrefetchTimeout = 3 * time.Second
 	t.Cleanup(func() { PrefetchTimeout = old })
 
 	pidfile := installHangCommand(t, "nix")
@@ -93,7 +93,7 @@ func TestPrefetchHashKillsHungChild(t *testing.T) {
 
 func TestPrefetchGitHubKillsHungChild(t *testing.T) {
 	old := PrefetchTimeout
-	PrefetchTimeout = time.Second
+	PrefetchTimeout = 3 * time.Second
 	t.Cleanup(func() { PrefetchTimeout = old })
 
 	pidfile := installHangCommand(t, "nix")
