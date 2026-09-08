@@ -62,6 +62,6 @@ jobs:
             tool_store="$(nix build ".#$tool" --no-link --print-out-paths --print-build-logs)"
             "$tool_store/bin/$tool" --version
             if [ "$tool" = summarize ]; then
-              SUMMARIZE_BIN="$tool_store/bin/summarize" go test -v ./internal -run '^TestSummarizePackageExtracts$' -count=1
+              SUMMARIZE_BIN="$tool_store/bin/summarize" nix shell --inputs-from . nixpkgs#go --command go test -v ./internal -run '^TestSummarizePackageExtracts$' -count=1
             fi
           done
