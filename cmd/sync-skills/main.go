@@ -2,13 +2,17 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
+	"github.com/openclaw/nix-openclaw-tools/internal"
 	"io"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"time"
 )
+
+var runTimeout = 5 * time.Minute
 
 type Mapping struct {
 	Tool string
@@ -59,13 +63,9 @@ func syncFrom(srcRoot, repoRoot string, mappings []Mapping) (bool, error) {
 }
 
 func run(dir string, name string, args ...string) error {
-	cmd := exec.Command(name, args...)
-	cmd.Dir = dir
 	var out bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &out
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("%s %v: %v: %s", name, args, err, out.String())
+	if err := internal.RunCommand(dir, runTimeout, &out, &out, name, args...); err != nil {
+		return fmt.Errorf("%s %v: %w: %s", name, args, err, out.String())
 	}
 	return nil
 }
@@ -91,6 +91,11 @@ func copyFile(src, dst string) error {
 }
 
 func main() {
+	flag.DurationVar(&runTimeout, "git-timeout", 5*time.Minute, "deadline per Git command (0 disables)")
+	flag.Parse()
+	if runTimeout < 0 {
+		log.Fatal("git-timeout must not be negative")
+	}
 	repoRoot, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)

@@ -130,3 +130,13 @@ Automation commits directly when versions or skills change.
 Tools are packaged as-is from upstream. See individual tool repos for their licenses.
 
 Nix packaging: MIT
+
+## Maintenance deadlines
+
+`sync-skills --git-timeout=5m` bounds each Git command.
+`update-tools --prefetch-timeout=10m --build-timeout=45m` bounds each Nix
+prefetch and summarize build. These are the defaults; increase them for slow
+builders or use `0` to leave a command unlimited. On Linux and macOS, deadline
+expiry, Ctrl-C, and SIGTERM terminate the command's process group, including
+helpers that retain output pipes. Cancelling a summarize build restores its
+package expression and does not start the cross-platform fallback.
