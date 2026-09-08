@@ -7,7 +7,20 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strings"
+	"time"
 )
+
+var (
+	HTTPClient    = newHTTPClient()
+	GitHubAPIBase = "https://api.github.com"
+)
+
+func newHTTPClient() *http.Client {
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.ResponseHeaderTimeout = 30 * time.Second
+	return &http.Client{Transport: transport}
+}
 
 type Release struct {
 	TagName string  `json:"tag_name"`
@@ -20,7 +33,7 @@ type Asset struct {
 }
 
 func LatestRelease(repo string) (*Release, error) {
-	url := fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", repo)
+	url := fmt.Sprintf("%s/repos/%s/releases/latest", strings.TrimRight(GitHubAPIBase, "/"), repo)
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
@@ -29,7 +42,7 @@ func LatestRelease(repo string) (*Release, error) {
 	if token := os.Getenv("GH_TOKEN"); token != "" {
 		req.Header.Set("Authorization", "Bearer "+token)
 	}
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
